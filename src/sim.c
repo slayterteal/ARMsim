@@ -4,7 +4,7 @@
 /*                                                             */
 /*   ECEN 4243                                                 */
 /*   Oklahoma State University                                 */
-/*                                                             */
+/*   Slayter Teal and Daniel Albrecht                          */
 /***************************************************************/
 
 #include <stdio.h>
@@ -69,6 +69,7 @@ int bchar_to_int(char* rsa) {
   return result;
 }
 
+int SBZ = 0;
 
 int data_process(char* i_) {
 
@@ -157,13 +158,13 @@ int data_process(char* i_) {
   // CMN Compare Negative
   if(!strcmp(d_opcode,"1011")) {
     printf("--- This is an CMN (Compare Negative) instruction. \n");
-    CMN(0, Rn, Operand2, I, 1, CC);
+    CMN(SBZ, Rn, Operand2, I, 1, CC);
     return 0;
   }	
   // CMP Compare Positive
   if(!strcmp(d_opcode,"1010")) {
     printf("--- This is an CMP (Compare Positive) instruction. \n");
-    CMP(0, Rn, Operand2, I, 1, CC);
+    CMP(SBZ, Rn, Operand2, I, 1, CC);
     return 0;
   }	
   // EOR
@@ -175,13 +176,13 @@ int data_process(char* i_) {
   // MOV
   if(!strcmp(d_opcode,"1101")) {
     printf("--- This is an MOV instruction. \n");
-    MOV(Rd, 0, Operand2, I, S, CC);
+    MOV(Rd, SBZ, Operand2, I, S, CC);
     return 0;
   }	
   // MVN
   if(!strcmp(d_opcode,"1111")) {
     printf("--- This is an MVN (Move Not) instruction. \n");
-    MVN(Rd, 0, Operand2, I, S, CC);
+    MVN(Rd, SBZ, Operand2, I, S, CC);
     return 0;
   }	
   // ORR
@@ -217,13 +218,13 @@ int data_process(char* i_) {
   // TEQ (Test Equivalence)
   if(!strcmp(d_opcode,"1001")) {
     printf("--- This is an TEQ (Test Equivalence) instruction. \n");
-    TEQ(0, Rn, Operand2, I, 1, CC);
+    TEQ(SBZ, Rn, Operand2, I, 1, CC);
     return 0;
   }	
   // TST
   if(!strcmp(d_opcode,"1000")) {
     printf("--- This is an TST (Test) instruction. \n");
-    TST(0, Rn, Operand2, I, 1, CC);
+    TST(SBZ, Rn, Operand2, I, 1, CC);
     return 0;
   }	
 

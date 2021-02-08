@@ -86,11 +86,11 @@ int ADD (int Rd, int Rn, int Operand2, int I, int S, int CC) {
 
 }
 
-int ADC (char* i_);
-int AND (char* i_);
+int ADC (int Rd, int Rn, int Operand2, int I, int S, int CC);
+int AND (int Rd, int Rn, int Operand2, int I, int S, int CC);
 int ASR (char* i_);
 int B (char* i_);
-int BIC (char* i_);
+int BIC (int Rd, int Rn, int Operand2, int I, int S, int CC);
 int BL (char* i_);
 int CMN (char* i_);
 int CMP (char* i_);
