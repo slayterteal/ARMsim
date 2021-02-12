@@ -95,13 +95,13 @@ int data_process(char* i_) {
     1111 = MVN - Rd:= NOT Op2
   */
 
-  char d_opcode[5];
+  char d_opcode[5]; // get the opcode of the instruction
   d_opcode[0] = i_[7]; 
   d_opcode[1] = i_[8]; 
   d_opcode[2] = i_[9]; 
   d_opcode[3] = i_[10]; 
   d_opcode[4] = '\0'; //ending the string array
-  char d_cond[5];
+  char d_cond[5]; // get the condition codes
   d_cond[0] = i_[0]; 
   d_cond[1] = i_[1]; 
   d_cond[2] = i_[2]; 
@@ -118,7 +118,10 @@ int data_process(char* i_) {
     operand2[i] = i_[20+i];
   }
 
-  // working variables
+  /*
+    Convert all of the data (gathered above) into a 
+    workable format for the C code. 
+  */
   int Rn = bchar_to_int(rn);
   int Rd = bchar_to_int(rd);
   int Operand2 = bchar_to_int(operand2);
@@ -233,6 +236,22 @@ int data_process(char* i_) {
 
 int branch_process(char* i_) {
   
+  // parse the char i
+    char d_opcode[5]; // get the opcode of the instruction
+  d_opcode[0] = i_[7]; 
+  d_opcode[1] = i_[8]; 
+  d_opcode[2] = i_[9]; 
+  d_opcode[3] = i_[10]; 
+  d_opcode[4] = '\0'; //ending the string array
+  char d_cond[5]; // get the condition codes
+  d_cond[0] = i_[0]; 
+  d_cond[1] = i_[1]; 
+  d_cond[2] = i_[2]; 
+  d_cond[3] = i_[3]; 
+  d_cond[4] = '\0';
+
+  char offset[25]; offset[24] = '\0';
+  for(int i = 0; i < )
   /* This function execute branch instruction */
 
   /* Add branch instructions here */ 
@@ -241,6 +260,7 @@ int branch_process(char* i_) {
 
 }
 
+// this is not a required section: BONUS
 int mul_process(char* i_) {
 
   /* This function execute multiply instruction */
