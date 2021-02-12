@@ -262,19 +262,21 @@ int branch_process(char* i_) {
   print("L = " + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
   
   /* Add branch instructions here */ 
+  // B
   if(L2 == 0) {
-    printf("--- This is an ADD instruction. \n");
-    ADD(Rd, Rn, Operand2, I, S, CC);
+    printf("--- This is an B (Branch) instruction. \n");
+    B(offset2, CC);
     return 0;
   }	
-
-
-
+  // BL 
+  if(L2 == 1) {
+    printf("--- This is an BL (Branch with Link Register) instruction. \n");
+    BL(offset2, CC);
+    return 0;
+  }	
   return 1;
-
 }
 
-// this is not a required section: BONUS
 int mul_process(char* i_) {
 
   /* This function execute multiply instruction */
@@ -282,25 +284,95 @@ int mul_process(char* i_) {
   /* Add multiply instructions here */ 
 
   return 1;
-
 }
 
+// load/store instructions
 int transfer_process(char* i_) {
-
   /* This function execute memory instruction */
+  // get the condition codes
+  char d_cond[5]; 
+  d_cond[0] = i_[0]; 
+  d_cond[1] = i_[1]; 
+  d_cond[2] = i_[2]; 
+  d_cond[3] = i_[3]; 
+  d_cond[4] = '\0';
+
+  /* 
+    Gets the I, P, U, B values.
+    These 4 variables define the addressing modes.
+    L, and B are used here.
+    P, W are used in the isa.h.
+    I don't know what the U is so we'll just ignore it...
+  */
+  char i[2]; i[0] = i_[6]; i[1] = '\0';
+  char p[2]; p[0] = i_[7]; p[1] = '\0';
+  char u[2]; u[0] = i_[8]; u[1] = '\0';
+  char w[2]; w[0] = i_[10]; w[1] = '\0';
+
+  // get the L and B ints
+  char l[2]; l[0] = i_[11]; l[1] = '\0';
+  char b[2]; b[0] = i_[9]; b[1] = '\0';
+
+  // the meaning of this changes depending on the addressing mode
+  // I will send this to the isa.h as a char array
+  char src2[13]; src2[12] = '0'; 
+  // rn and rd are our register files
+  char rn[5]; rn[4] = '\0';
+  char rd[5]; rd[4] = '\0';
+  for(int i = 0; i < 4; i++) {
+    rn[i] = i_[12+i];
+    rd[i] = i_[16+i];
+  }
+  for(int i = 0; i < 12; i++) {
+    src2[i] = i_[20+i];
+  }
+
+  int CC = bchar_to_int(d_cond);
+  int L = bchar_to_int(l);
+  int B = bchar_to_int(b);
+  int P = bchar_to_int(p);
+  int W = bchar_to_int(w);
+  int Rn = bchar_to_int(rn);
+  int Rd = bchar_to_int(rd);
 
   /* Add memory instructions here */ 
+  // STR
+  if(L == 0 && B == 0) {
+    printf("--- This is an STR instruction. \n");
+    STR(Rd, Rn, p, w, src2, CC);
+    return 0;
+  }
+  //STRB
+  if(L == 0 && B == 1) {
+    printf("--- This is an STRB instruction. \n");
+    STRB(Rd, Rn, p, w, src2, CC);
+    return 0;
+  }
+  // LDR
+  if(L == 1 && B == 0) {
+    printf("--- This is an LDR instruction. \n");
+    LDR(Rd, Rn, p, w, src2, CC);
+    return 0;
+  }
+  // LDRB
+  if(L == 1 && B == 1) {
+    printf("--- This is an LDR instruction. \n");
+    LDR(Rd, Rn, p, w, src2, CC);
+    return 0;
+  }
 
+  /*
+    As a general note, the 'type' of addressing mode
+    (preindex, offset, or postindex) needs to be determined in the
+    isa.h. The lec_isa_pt2.pptx should help.
+  */
   return 1;
-
 }
 
 int interruption_process(char* i_) {
-
   SWI(i_);
   RUN_BIT = 0;
   return 0;
-
 }
 
 unsigned int COND(unsigned int i_word) {
@@ -339,6 +411,7 @@ int decode_and_execute(char* i_) {
     printf("- This is a Single Data Transfer Instruction. \n");
     transfer_process(i_);
   }
+  // Calls the SWI() function
   if((i_[4] == '1') && (i_[5] == '1') && (i_[6] == '1') && (i_[7] == '1')) {
     printf("- This is a Software Interruption Instruction. \n");
     interruption_process(i_);
