@@ -235,15 +235,14 @@ int data_process(char* i_) {
 }
 
 int branch_process(char* i_) {
+  /* This function execute branch instruction */
+
+  char L[2];
+  L[0] = i_[7];
+  L[1] = '\0';
   
-  // parse the char i
-    char d_opcode[5]; // get the opcode of the instruction
-  d_opcode[0] = i_[7]; 
-  d_opcode[1] = i_[8]; 
-  d_opcode[2] = i_[9]; 
-  d_opcode[3] = i_[10]; 
-  d_opcode[4] = '\0'; //ending the string array
-  char d_cond[5]; // get the condition codes
+  // get the condition codes
+  char d_cond[5]; 
   d_cond[0] = i_[0]; 
   d_cond[1] = i_[1]; 
   d_cond[2] = i_[2]; 
@@ -251,10 +250,25 @@ int branch_process(char* i_) {
   d_cond[4] = '\0';
 
   char offset[25]; offset[24] = '\0';
-  for(int i = 0; i < )
-  /* This function execute branch instruction */
+  for(int i = 0; i < 24; i++)
+  {
+    offset[i] = i_[8+i];
+  }
 
+  // conversion logic
+  int L2 = bchar_to_int(L);
+  int offset2 = bchar_to_int(offset);
+  int CC = bchar_to_int(d_cond);
+  print("L = " + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
+  
   /* Add branch instructions here */ 
+  if(L2 == 0) {
+    printf("--- This is an ADD instruction. \n");
+    ADD(Rd, Rn, Operand2, I, S, CC);
+    return 0;
+  }	
+
+
 
   return 1;
 
