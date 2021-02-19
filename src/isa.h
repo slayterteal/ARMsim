@@ -28,6 +28,26 @@
 #include <string.h>
 #include "shell.h"
 
+int LSL (int num, int shift)
+{
+  return (num << shift);
+}
+
+int LSR (int num, int shift)
+{
+  return (num >> shift);
+}
+
+int ROR (int Rd, int SBZ, int Operand2, int I, int S, int CC)
+{
+
+}
+
+int ASR (int Rd, int SBZ, int Operand2, int I, int S, int CC)
+{
+
+}
+
 int ADD (int Rd, int Rn, int Operand2, int I, int S, int CC) {
 
   int cur = 0;

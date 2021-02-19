@@ -138,7 +138,6 @@ int data_process(char* i_) {
     ADD(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
-
   /* Add other data instructions here */ 
   // AND
   if(!strcmp(d_opcode,"0000")) {
@@ -176,10 +175,36 @@ int data_process(char* i_) {
     EOR(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
-  // MOV
+  // Shift Instructions, assuming Imm
   if(!strcmp(d_opcode,"1101")) {
-    printf("--- This is an MOV instruction. \n");
-    MOV(Rd, SBZ, Operand2, I, S, CC);
+    char sh[3]; sh[2] = '\0';
+    sh[0] = operand2[5]; sh[1] = operand2[6];
+
+    if(I == 1)
+    {
+      printf("--- This is an MOV instruction. \n");
+      MOV(Rd, SBZ, Operand2, I, S, CC);
+    }
+    else if(I == 0 && !strcmp(sh, "00"))
+    {
+      printf("--- This is a LSL instruction. \n");
+      LSL(Rd, SBZ, Operand2, I, S, CC);
+    }
+    else if(I == 0 && !strcmp(sh, "01"))
+    {
+      printf("--- This is a LSR instruction. \n");
+      LSR(Rd, SBZ, Operand2, I, S, CC);
+    }
+    else if(I == 0 && !strcmp(sh, "10"))
+    {
+      printf("--- This is a ASR instruction. \n");
+      ASR(Rd, SBZ, Operand2, I, S, CC);
+    }
+    else if(I == 0 && !strcmp(sh, "11"))
+    {
+      printf("--- This is a ROR instruction. \n");
+      ROR(Rd, SBZ, Operand2, I, S, CC);
+    }
     return 0;
   }	
   // MVN
@@ -277,6 +302,7 @@ int branch_process(char* i_) {
   return 1;
 }
 
+// not required
 int mul_process(char* i_) {
 
   /* This function execute multiply instruction */
