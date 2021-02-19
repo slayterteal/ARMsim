@@ -177,32 +177,36 @@ int data_process(char* i_) {
   }	
   // Shift Instructions, assuming Imm
   if(!strcmp(d_opcode,"1101")) {
-    char sh[3]; sh[2] = '\0';
-    sh[0] = operand2[5]; sh[1] = operand2[6];
-
-    if(I == 1)
+    if(I==1)
     {
       printf("--- This is an MOV instruction. \n");
       MOV(Rd, SBZ, Operand2, I, S, CC);
     }
-    else if(I == 0 && !strcmp(sh, "00"))
-    {
-      printf("--- This is a LSL instruction. \n");
-      LSL(Rd, SBZ, Operand2, I, S, CC);
-    }
-    else if(I == 0 && !strcmp(sh, "01"))
-    {
-      printf("--- This is a LSR instruction. \n");
-      LSR(Rd, SBZ, Operand2, I, S, CC);
-    }
-    else if(I == 0 && !strcmp(sh, "10"))
+
+    int f = operand2[7] -'0';
+    int s = operand2[6] -'0';
+    int h = operand2[5] -'0';
+    int se = operand2[4] -'0';
+    // else if(I == 0 && !strcmp(sh, "00"))
+    // {
+    //   printf("--- This is a LSL instruction. \n");
+    //   LSL(Rd, SBZ, Operand2, I, S, CC);
+    // }
+    // else if(I == 0 && !strcmp(sh, "01"))
+    // {
+    //   printf("--- This is a LSR instruction. \n");
+    //   LSR(Rd, SBZ, Operand2, I, S, CC);
+    // }
+    if(I == 0 && h == 1 && s == 0)
     {
       printf("--- This is a ASR instruction. \n");
+      if(f == 0) I == 1;
       ASR(Rd, SBZ, Operand2, I, S, CC);
     }
-    else if(I == 0 && !strcmp(sh, "11"))
+    else if(I == 0 && h == 1 && s == 1)
     {
       printf("--- This is a ROR instruction. \n");
+      if(f == 0) I == 1;
       ROR(Rd, SBZ, Operand2, I, S, CC);
     }
     return 0;

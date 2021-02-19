@@ -28,6 +28,15 @@
 #include <string.h>
 #include "shell.h"
 
+
+/*
+  For these commands LSL and LSR are primary for internal
+  use within the isa ONLY.
+
+  for ROR and ASR: 
+  if I==1 you are working with an IMMEDIATE
+  if I==0 you are working with a REGISTER
+*/
 int LSL (int num, int shift)
 {
   return (num << shift);
