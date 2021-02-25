@@ -183,9 +183,9 @@ int data_process(char* i_) {
       MOV(Rd, SBZ, Operand2, I, S, CC);
     }
 
-    int f = operand2[7] -'0';
-    int s = operand2[6] -'0';
-    int h = operand2[5] -'0';
+    int f  = operand2[7] -'0';
+    int s  = operand2[6] -'0';
+    int h  = operand2[5] -'0';
     int se = operand2[4] -'0';
     // else if(I == 0 && !strcmp(sh, "00"))
     // {
@@ -288,7 +288,9 @@ int branch_process(char* i_) {
   int L2 = bchar_to_int(L);
   int offset2 = bchar_to_int(offset);
   int CC = bchar_to_int(d_cond);
-  print("L = " + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
+  //Following statement gave error, new implementation does not. Check.
+  //print("L = " + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
+  print("L = %d\nOffset = %d\nCC: %d", L2, offset2, byte_to_binary4(CC)); // + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
   
   /* Add branch instructions here */ 
   // B

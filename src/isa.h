@@ -217,6 +217,7 @@ int AND (int Rd, int Rn, int Operand2, int I, int S, int CC){
     /*
       //DANIEL TO SLAYTER: WTF IS THIS GUY \/
       //NOTE: I think the last part became deleted, will fix later
+      //NOTE: Nevermind it was copied twice, maybe my problem
       case 0: cur = CURRENT_STATE.REGS[Rn] && 
 	  (CURRENT_STATE.REGS[Rm] << CURRENT_STATE.REGS[Rs]);
 	  break;
@@ -248,7 +249,12 @@ int AND (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
-int B (char* i_);
+int B (int offset2, int CC){
+
+  CURRENT_STATE.REGS[15] = (CURRENT_STATE.REGS[15] + 8) + (offset2 << 2);
+
+  return 0;
+}
 int BIC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -312,7 +318,14 @@ int BIC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
-int BL (char* i_);
+int BL (int offset2, int CC){
+
+  CURRENT_STATE.REGS[14] = (CURRENT_STATE.REGS[15] + 8) - 4;
+  CURRENT_STATE.REGS[15] = (CURRENT_STATE.REGS[15] + 8) + (offset2 << 2);
+
+  return 0;
+}
+
 int CMN (char* i_);
 int CMP (char* i_);
 int EOR (int Rd, int Rn, int Operand2, int I, int S, int CC){
