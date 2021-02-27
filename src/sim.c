@@ -76,23 +76,6 @@ int data_process(char* i_) {
   /*
     This function further decode and execute subset of data processing 
     instructions of ARM ISA.
-
-    0000 = AND - Rd:= Op1 AND Op2
-    0001 = EOR - Rd:= Op1 EOR Op2
-    0010 = SUB - Rd:= Op1 - Op2
-    0011 = RSB - Rd:= Op2 - Op1
-    0100 = ADD - Rd:= Op1 + Op2
-    0101 = ADC - Rd:= Op1 + Op2 + C
-    0110 = SBC - Rd:= Op1 - Op2 + C - 1
-    0111 = RSC - Rd:= Op2 - Op1 + C - 1
-    1000 = TST - set condition codes on Op1 AND Op2 
-    1001 = TEQ - set condition codes on Op1 EOR Op2 
-    1010 = CMP - set condition codes on Op1 - Op2 
-    1011 = CMN - set condition codes on Op1 + Op2 
-    1100 = ORR - Rd:= Op1 OR Op2
-    1101 = MOV - Rd:= Op2
-    1110 = BIC - Rd:= Op1 AND NOT Op2 
-    1111 = MVN - Rd:= NOT Op2
   */
 
   char d_opcode[5]; // get the opcode of the instruction
@@ -131,51 +114,56 @@ int data_process(char* i_) {
   printf("Opcode = %s\n Rn = %d\n Rd = %d\n Operand2 = %s\n I = %d\n S = %d\n COND = %s\n", d_opcode, Rn, Rd, byte_to_binary12(Operand2), I, S, byte_to_binary4(CC));
   printf("\n");
 
-  /* Example - use and replicate */
   // ADD
   if(!strcmp(d_opcode,"0100")) {
     printf("--- This is an ADD instruction. \n");
     ADD(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
-  /* Add other data instructions here */ 
+  
   // AND
   if(!strcmp(d_opcode,"0000")) {
     printf("--- This is an AND instruction. \n");
-    AND(Rd, Rn, Operand2, I, S);
+    AND(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
+  
   // ADC
   if(!strcmp(d_opcode,"0101")) {
     printf("--- This is an ADC instruction. \n");
     ADC(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
+  
   // BIC
   if(!strcmp(d_opcode,"1110")) {
     printf("--- This is an BIC instruction. \n");
     BIC(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
+  
   // CMN Compare Negative
-  if(!strcmp(d_opcode,"1011")) {
-    printf("--- This is an CMN (Compare Negative) instruction. \n");
-    CMN(SBZ, Rn, Operand2, I, 1, CC);
-    return 0;
-  }	
+  // if(!strcmp(d_opcode,"1011")) {
+  //   printf("--- This is an CMN (Compare Negative) instruction. \n");
+  //   CMN(SBZ, Rn, Operand2, I, 1, CC);
+  //   return 0;
+  // }	
+  
   // CMP Compare Positive
-  if(!strcmp(d_opcode,"1010")) {
-    printf("--- This is an CMP (Compare Positive) instruction. \n");
-    CMP(SBZ, Rn, Operand2, I, 1, CC);
-    return 0;
-  }	
+  // if(!strcmp(d_opcode,"1010")) {
+  //   printf("--- This is an CMP (Compare Positive) instruction. \n");
+  //   CMP(SBZ, Rn, Operand2, I, 1, CC);
+  //   return 0;
+  // }	
+  
   // EOR
   if(!strcmp(d_opcode,"0001")) {
     printf("--- This is an EOR instruction. \n");
     EOR(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
-  // Shift Instructions, assuming Imm
+  
+  // Shift Instructions
   if(!strcmp(d_opcode,"1101")) {
     if(I==1)
     {
@@ -211,30 +199,34 @@ int data_process(char* i_) {
     }
     return 0;
   }	
+  
   // MVN
   if(!strcmp(d_opcode,"1111")) {
     printf("--- This is an MVN (Move Not) instruction. \n");
     MVN(Rd, SBZ, Operand2, I, S, CC);
     return 0;
   }	
+  
   // ORR
   if(!strcmp(d_opcode,"1100")) {
     printf("--- This is an ORR instruction. \n");
     ORR(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }	
-  // RSB
-  if(!strcmp(d_opcode,"0011")) {
-    printf("--- This is an RSB instruction. \n");
-    RSB(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }	
-  // RSC
-  if(!strcmp(d_opcode,"0111")) {
-    printf("--- This is an RSC instruction. \n");
-    RSC(Rd, Rn, Operand2, I, S, CC);
-    return 0;
-  }
+  
+  // // RSB
+  // if(!strcmp(d_opcode,"0011")) {
+  //   printf("--- This is an RSB instruction. \n");
+  //   RSB(Rd, Rn, Operand2, I, S, CC);
+  //   return 0;
+  // }	
+  // // RSC
+  // if(!strcmp(d_opcode,"0111")) {
+  //   printf("--- This is an RSC instruction. \n");
+  //   RSC(Rd, Rn, Operand2, I, S, CC);
+  //   return 0;
+  // }
+  
   // SBC
   if(!strcmp(d_opcode,"0110")) {
     printf("--- This is an SBC (Subtract with Carry) instruction. \n");
@@ -247,18 +239,18 @@ int data_process(char* i_) {
     SUB(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }
-  // TEQ (Test Equivalence)
-  if(!strcmp(d_opcode,"1001")) {
-    printf("--- This is an TEQ (Test Equivalence) instruction. \n");
-    TEQ(SBZ, Rn, Operand2, I, 1, CC);
-    return 0;
-  }	
-  // TST
-  if(!strcmp(d_opcode,"1000")) {
-    printf("--- This is an TST (Test) instruction. \n");
-    TST(SBZ, Rn, Operand2, I, 1, CC);
-    return 0;
-  }	
+  // // TEQ (Test Equivalence)
+  // if(!strcmp(d_opcode,"1001")) {
+  //   printf("--- This is an TEQ (Test Equivalence) instruction. \n");
+  //   TEQ(SBZ, Rn, Operand2, I, 1, CC);
+  //   return 0;
+  // }	
+  // // TST
+  // if(!strcmp(d_opcode,"1000")) {
+  //   printf("--- This is an TST (Test) instruction. \n");
+  //   TST(SBZ, Rn, Operand2, I, 1, CC);
+  //   return 0;
+  // }	
 
   return 1;	
 }
@@ -290,7 +282,7 @@ int branch_process(char* i_) {
   int CC = bchar_to_int(d_cond);
   //Following statement gave error, new implementation does not. Check.
   //print("L = " + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
-  print("L = %d\nOffset = %d\nCC: %d", L2, offset2, byte_to_binary4(CC)); // + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
+  printf("L = %d\nOffset = %d\nCC: %d", L2, offset2, byte_to_binary4(CC)); // + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
   
   /* Add branch instructions here */ 
   // B
@@ -305,16 +297,6 @@ int branch_process(char* i_) {
     BL(offset2, CC);
     return 0;
   }	
-  return 1;
-}
-
-// not required
-int mul_process(char* i_) {
-
-  /* This function execute multiply instruction */
-
-  /* Add multiply instructions here */ 
-
   return 1;
 }
 
@@ -367,29 +349,31 @@ int transfer_process(char* i_) {
   int Rn = bchar_to_int(rn);
   int Rd = bchar_to_int(rd);
 
-  /* Add memory instructions here */ 
   // STR
   if(L == 0 && B == 0) {
     printf("--- This is an STR instruction. \n");
-    STR(Rd, Rn, p, w, src2, CC);
+    // STR(Rd, Rn, p, w, src2, CC);
     return 0;
   }
+  
   //STRB
   if(L == 0 && B == 1) {
     printf("--- This is an STRB instruction. \n");
-    STRB(Rd, Rn, p, w, src2, CC);
+    // STRB(Rd, Rn, p, w, src2, CC);
     return 0;
   }
+  
   // LDR
   if(L == 1 && B == 0) {
     printf("--- This is an LDR instruction. \n");
-    LDR(Rd, Rn, p, w, src2, CC);
+    // LDR(Rd, Rn, p, w, src2, CC);
     return 0;
   }
+  
   // LDRB
   if(L == 1 && B == 1) {
     printf("--- This is an LDR instruction. \n");
-    LDR(Rd, Rn, p, w, src2, CC);
+    // LDR(Rd, Rn, p, w, src2, CC);
     return 0;
   }
 
@@ -419,7 +403,6 @@ unsigned int OPCODE(unsigned int i_word) {
 
 }
 
-
 int decode_and_execute(char* i_) {
 
   /* 
@@ -433,7 +416,8 @@ int decode_and_execute(char* i_) {
   }
   if((i_[4] == '0') && (i_[5] == '0') && (i_[6] == '0') && (i_[7] == '0') && (i_[24] == '1') && (i_[25] == '0') && (i_[26] == '0') && (i_[27] == '1')) {
     printf("- This is a Multiply Instruction. \n");
-    mul_process(i_);
+    // mul_process(i_);
+    return 1;
   }
   else {
     printf("- This is a Data Processing Instruction. \n");

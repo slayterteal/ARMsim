@@ -175,6 +175,7 @@ int ADC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   return 0;
 
 }
+
 int AND (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -249,12 +250,14 @@ int AND (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
+
 int B (int offset2, int CC){
 
   CURRENT_STATE.REGS[15] = (CURRENT_STATE.REGS[15] + 8) + (offset2 << 2);
 
   return 0;
 }
+
 int BIC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -318,6 +321,7 @@ int BIC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
+
 int BL (int offset2, int CC){
 
   CURRENT_STATE.REGS[14] = (CURRENT_STATE.REGS[15] + 8) - 4;
@@ -329,6 +333,7 @@ int BL (int offset2, int CC){
 // TODO: these are the last two functions we need to implement!
 int CMN (char* i_);
 int CMP (char* i_);
+
 int EOR (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -386,8 +391,10 @@ int EOR (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
+
 int LDRB (char* i_);
 int MLA (char* i_);
+
 int MOV (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -437,7 +444,7 @@ int MOV (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
-int MUL (char* i_);
+
 int MVN (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -487,6 +494,7 @@ int MVN (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
+
 int ORR (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -544,6 +552,7 @@ int ORR (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
+
 int SBC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -599,8 +608,10 @@ int SBC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
+
 int STR (char* i_);
 int STRB (char* i_);
+
 int SUB (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
   if(I == 0) {
@@ -656,8 +667,10 @@ int SUB (int Rd, int Rn, int Operand2, int I, int S, int CC){
   }	
   return 0;
 }
+
 int TEQ (char* i_);
 int TST (char* i_);
+
 int SWI (char* i_){return 0;}
 
 #endif
