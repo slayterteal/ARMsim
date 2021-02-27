@@ -106,6 +106,7 @@ int data_process(char* i_) {
     workable format for the C code. 
   */
   int Rn = bchar_to_int(rn);
+  printf(Rn);
   int Rd = bchar_to_int(rd);
   int Operand2 = bchar_to_int(operand2);
   int I = i_[6]-'0';
@@ -175,6 +176,7 @@ int data_process(char* i_) {
     int s  = operand2[6] -'0';
     int h  = operand2[5] -'0';
     int se = operand2[4] -'0';
+    
     // else if(I == 0 && !strcmp(sh, "00"))
     // {
     //   printf("--- This is a LSL instruction. \n");
@@ -185,12 +187,16 @@ int data_process(char* i_) {
     //   printf("--- This is a LSR instruction. \n");
     //   LSR(Rd, SBZ, Operand2, I, S, CC);
     // }
+    
+    //ASR
     if(I == 0 && h == 1 && s == 0)
     {
       printf("--- This is a ASR instruction. \n");
       if(f == 0) I == 1;
       ASR(Rd, SBZ, Operand2, I, S, CC);
     }
+    
+    //ROR
     else if(I == 0 && h == 1 && s == 1)
     {
       printf("--- This is a ROR instruction. \n");
@@ -214,19 +220,6 @@ int data_process(char* i_) {
     return 0;
   }	
   
-  // // RSB
-  // if(!strcmp(d_opcode,"0011")) {
-  //   printf("--- This is an RSB instruction. \n");
-  //   RSB(Rd, Rn, Operand2, I, S, CC);
-  //   return 0;
-  // }	
-  // // RSC
-  // if(!strcmp(d_opcode,"0111")) {
-  //   printf("--- This is an RSC instruction. \n");
-  //   RSC(Rd, Rn, Operand2, I, S, CC);
-  //   return 0;
-  // }
-  
   // SBC
   if(!strcmp(d_opcode,"0110")) {
     printf("--- This is an SBC (Subtract with Carry) instruction. \n");
@@ -239,6 +232,7 @@ int data_process(char* i_) {
     SUB(Rd, Rn, Operand2, I, S, CC);
     return 0;
   }
+
   // // TEQ (Test Equivalence)
   // if(!strcmp(d_opcode,"1001")) {
   //   printf("--- This is an TEQ (Test Equivalence) instruction. \n");
@@ -287,13 +281,13 @@ int branch_process(char* i_) {
   /* Add branch instructions here */ 
   // B
   if(L2 == 0) {
-    printf("--- This is an B (Branch) instruction. \n");
+    printf("\n--- This is an B (Branch) instruction. \n");
     B(offset2, CC);
     return 0;
   }	
   // BL 
   if(L2 == 1) {
-    printf("--- This is an BL (Branch with Link Register) instruction. \n");
+    printf("\n--- This is an BL (Branch with Link Register) instruction. \n");
     BL(offset2, CC);
     return 0;
   }	
@@ -327,8 +321,6 @@ int transfer_process(char* i_) {
   char l[2]; l[0] = i_[11]; l[1] = '\0';
   char b[2]; b[0] = i_[9]; b[1] = '\0';
 
-  // the meaning of this changes depending on the addressing mode
-  // I will send this to the isa.h as a char array
   char src2[13]; src2[12] = '0'; 
   // rn and rd are our register files
   char rn[5]; rn[4] = '\0';
@@ -342,6 +334,7 @@ int transfer_process(char* i_) {
   }
 
   int CC = bchar_to_int(d_cond);
+  int I = bchar_to_int(i);
   int L = bchar_to_int(l);
   int B = bchar_to_int(b);
   int P = bchar_to_int(p);
@@ -352,28 +345,28 @@ int transfer_process(char* i_) {
   // STR
   if(L == 0 && B == 0) {
     printf("--- This is an STR instruction. \n");
-    // STR(Rd, Rn, p, w, src2, CC);
+    // STR(Rd, Rn, I, P, W, src2, CC);
     return 0;
   }
   
   //STRB
   if(L == 0 && B == 1) {
     printf("--- This is an STRB instruction. \n");
-    // STRB(Rd, Rn, p, w, src2, CC);
+    // STRB(Rd, Rn, I, P, W, src2, CC);
     return 0;
   }
   
   // LDR
   if(L == 1 && B == 0) {
     printf("--- This is an LDR instruction. \n");
-    // LDR(Rd, Rn, p, w, src2, CC);
+    // LDR(Rd, Rn, I, P, W, src2, CC);
     return 0;
   }
   
   // LDRB
   if(L == 1 && B == 1) {
     printf("--- This is an LDR instruction. \n");
-    // LDR(Rd, Rn, p, w, src2, CC);
+    // LDR(Rd, Rn, I, P, W, src2, CC);
     return 0;
   }
 

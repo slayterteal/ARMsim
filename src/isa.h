@@ -330,7 +330,6 @@ int BL (int offset2, int CC){
   return 0;
 }
 
-// TODO: these are the last two functions we need to implement!
 int CMN (char* i_);
 int CMP (char* i_);
 
@@ -392,8 +391,8 @@ int EOR (int Rd, int Rn, int Operand2, int I, int S, int CC){
   return 0;
 }
 
+int LDR ();
 int LDRB (char* i_);
-int MLA (char* i_);
 
 int MOV (int Rd, int Rn, int Operand2, int I, int S, int CC){
   int cur = 0;
