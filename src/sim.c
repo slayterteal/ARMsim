@@ -106,7 +106,6 @@ int data_process(char* i_) {
     workable format for the C code. 
   */
   int Rn = bchar_to_int(rn);
-  printf(Rn);
   int Rd = bchar_to_int(rd);
   int Operand2 = bchar_to_int(operand2);
   int I = i_[6]-'0';
