@@ -143,18 +143,18 @@ int data_process(char* i_) {
   }	
   
   // CMN Compare Negative
-  // if(!strcmp(d_opcode,"1011")) {
-  //   printf("--- This is an CMN (Compare Negative) instruction. \n");
-  //   CMN(SBZ, Rn, Operand2, I, 1, CC);
-  //   return 0;
-  // }	
+  if(!strcmp(d_opcode,"1011")) {
+    printf("--- This is an CMN (Compare Negative) instruction. \n");
+    CMN(SBZ, Rn, Operand2, I, 1, CC);
+    return 0;
+  }	
   
-  // CMP Compare Positive
-  // if(!strcmp(d_opcode,"1010")) {
-  //   printf("--- This is an CMP (Compare Positive) instruction. \n");
-  //   CMP(SBZ, Rn, Operand2, I, 1, CC);
-  //   return 0;
-  // }	
+  //CMP, Compare Positive
+  if(!strcmp(d_opcode,"1010")) {
+    printf("--- This is an CMP (Compare Positive) instruction. \n");
+    CMP(SBZ, Rn, Operand2, I, 1, CC);
+    return 0;
+  }	
   
   // EOR
   if(!strcmp(d_opcode,"0001")) {
@@ -336,36 +336,39 @@ int transfer_process(char* i_) {
   int I = bchar_to_int(i);
   int L = bchar_to_int(l);
   int B = bchar_to_int(b);
+  int U = bchar_to_int(u);
   int P = bchar_to_int(p);
   int W = bchar_to_int(w);
   int Rn = bchar_to_int(rn);
   int Rd = bchar_to_int(rd);
 
+  int Src2 = bchar_to_int(src2);
+
   // STR
   if(L == 0 && B == 0) {
     printf("--- This is an STR instruction. \n");
-    // STR(Rd, Rn, I, P, W, src2, CC);
+    // STR(Rd, Rn, I, P, U, W, Src2, CC);
     return 0;
   }
   
   //STRB
   if(L == 0 && B == 1) {
     printf("--- This is an STRB instruction. \n");
-    // STRB(Rd, Rn, I, P, W, src2, CC);
+    // STRB(Rd, Rn, I, P, U, W, Src2, CC);
     return 0;
   }
   
   // LDR
   if(L == 1 && B == 0) {
     printf("--- This is an LDR instruction. \n");
-    // LDR(Rd, Rn, I, P, W, src2, CC);
+    LDR(Rd, Rn, I, P, U, W, Src2, CC);
     return 0;
   }
   
   // LDRB
   if(L == 1 && B == 1) {
-    printf("--- This is an LDR instruction. \n");
-    // LDR(Rd, Rn, I, P, W, src2, CC);
+    printf("--- This is an LDRB instruction. \n");
+    // LDRB(Rd, Rn, I, P, U, W, Src2, CC);
     return 0;
   }
 
@@ -446,5 +449,7 @@ void process_instruction() {
   decode_and_execute(byte_to_binary32(inst_word));
 
   NEXT_STATE.PC += 4;
+
+  return;
 
 }
