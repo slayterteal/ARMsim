@@ -121,7 +121,7 @@ int ASR (int Rd, int SBZ, int Operand2, int I, int S, int CC)
     /*
       Given that the value stored within each register 
       is a 24-bit number thus it has to be shifted left then
-      an arithmatic right shift must be done giving is a 32
+      an arithmetic right shift must be done giving is a 32
       bit number that can be shifted.
     */
     CURRENT_STATE.REGS[Rm] = CURRENT_STATE.REGS[Rm] << 8;
@@ -722,7 +722,130 @@ int LDR (int Rd, int Rn, int I, int P, int U, int W, int src2, int CC){
   }
 }
 
-// int LDRB (int Rd, int Rn, int I, int P, int U, int W, int src2, int CC);
+int LDRB (int Rd, int Rn, int I, int P, int U, int W, int src2, int CC){
+  //if(Rd == 15)
+  int data = 0;
+  int Rm = src2 & 0x00000000F;
+  //Immediate values
+  if(I == 0){
+    if( P == 1 & W == 0){
+      if( U == 1) data = CURRENT_STATE.REGS[Rn] + src2;
+      else data = CURRENT_STATE.REGS[Rn] - src2; 
+      return 0;
+    }
+    else if(P == 1 & W == 1){
+      if( U == 1) data = CURRENT_STATE.REGS[Rn] + src2;
+      else data = CURRENT_STATE.REGS[Rn] - src2; 
+      //TODO: CONDITION TO BE MET
+      //Always condition??
+      return 0;
+    }
+    else if(P == 0 & W == 0){
+      if(Rn == Rd){
+        if( U == 1) data = CURRENT_STATE.REGS[Rn] + src2;
+        else data = CURRENT_STATE.REGS[Rn] - src2; 
+      }
+      return 0;
+    }
+  }
+  //Register values
+  //Non-shifted registered treated as shifted register
+  //with shift of 0
+  else{
+    int shamt_5 = (src2 >> 7) & 0x0000001F;
+    int sh = (src2 >> 5) & 0x00000003;
+    int Rm = src2 & 0x0000000F;
+    int index = 0;
+    int off = 0;
+
+    if( P == 1 & W == 0){
+      switch(sh){
+        case 0:
+          index = CURRENT_STATE.REGS[Rm] << shamt_5;
+          break;
+        case 1:
+          index = CURRENT_STATE.REGS[Rm] >> shamt_5;
+          break;
+        case 2:
+          off = CURRENT_STATE.REGS[Rm];
+          off = (signed int) off >> shamt_5;
+          index = off;
+          break;
+        case 3:
+          index = ((CURRENT_STATE.REGS[Rm] >> shamt_5) |
+                (CURRENT_STATE.REGS[Rm] << (32 - shamt_5)));
+          break;
+      }
+      if(U == 1) data = CURRENT_STATE.REGS[Rn] + index;
+      else data = CURRENT_STATE.REGS[Rn] - index;
+      
+      return 0;  
+    }
+    else if( P == 1 & W == 1){
+      int shamt_5 = (src2 >> 7) & 0x0000001F;
+      int sh = (src2 >> 5) & 0x00000003;
+      int Rm = src2 & 0x0000000F;
+      int index = 0;
+      int off;
+
+      switch(sh){
+        case 0:
+          index = CURRENT_STATE.REGS[Rm] << shamt_5;
+          break;
+        case 1:
+          index = CURRENT_STATE.REGS[Rm] >> shamt_5;
+          break;
+        case 2:
+          off = CURRENT_STATE.REGS[Rm];
+          off = (signed int) off >> shamt_5;
+          index = off;
+          break;
+        case 3:
+          index = ((CURRENT_STATE.REGS[Rm] >> shamt_5) |
+                (CURRENT_STATE.REGS[Rm] << (32 - shamt_5)));
+          break;
+      }
+          
+      if(U == 1) data = CURRENT_STATE.REGS[Rn] + index;
+      else data = CURRENT_STATE.REGS[Rn] - index;
+      CURRENT_STATE.REGS[Rn] = data;
+
+      return 0;
+    }
+    else if( P == 0 & W == 0){
+      int shamt_5 = (src2 >> 7) & 0x0000001F;
+      int sh = (src2 >> 5) & 0x00000003;
+      int Rm = src2 & 0x0000000F;
+      int index = 0;
+      int off = 0;
+
+      
+      switch(sh){
+        case 0:
+          index = CURRENT_STATE.REGS[Rm] << shamt_5;
+          break;
+        case 1:
+          index = CURRENT_STATE.REGS[Rm] >> shamt_5;
+          break;
+        case 2:
+          off = CURRENT_STATE.REGS[Rm];
+          off = (signed int) off >> shamt_5;
+          index = off;
+          break;
+        case 3:
+          index = ((CURRENT_STATE.REGS[Rm] >> shamt_5) |
+                (CURRENT_STATE.REGS[Rm] << (32 - shamt_5)));
+          break;
+      }
+      if(U == 1) data = CURRENT_STATE.REGS[Rn] + index;
+      else data = CURRENT_STATE.REGS[Rn] - index;
+      CURRENT_STATE.REGS[Rn] = data;
+
+      return 0;
+    }
+  }
+}
+
 
 int MOV (int Rd, int SBZ, int Operand2, int I, int S, int CC){
   int cur = 0;
@@ -916,7 +1039,7 @@ int SBC (int Rd, int Rn, int Operand2, int I, int S, int CC){
   if (I == 1) {
     int rotate = Operand2 >> 8;
     int Imm = Operand2 & 0x000000FF;
-    cur = CURRENT_STATE.REGS[Rn] + (Imm>>2*rotate|(Imm<<(32-2*rotate)));
+    cur = CURRENT_STATE.REGS[Rn] - (Imm>>2*rotate|(Imm<<(32-2*rotate)));
   }
   NEXT_STATE.REGS[Rd] = cur;
   if (S == 1) {
