@@ -176,16 +176,14 @@ int data_process(char* i_) {
     int h  = operand2[5] -'0';
     int se = operand2[4] -'0';
     
-    // else if(I == 0 && !strcmp(sh, "00"))
-    // {
-    //   printf("--- This is a LSL instruction. \n");
-    //   LSL(Rd, SBZ, Operand2, I, S, CC);
-    // }
-    // else if(I == 0 && !strcmp(sh, "01"))
-    // {
-    //   printf("--- This is a LSR instruction. \n");
-    //   LSR(Rd, SBZ, Operand2, I, S, CC);
-    // }
+    /*
+      These instructions look at the F bit to determine if the instruction is
+      a immediate or register function so looked at that bit and manually set the 
+      I bit to pass to the ISA.
+
+      Although we could have just passed the F bit, we did this to keep things
+      uniform and easier for the lab partner working on the ISA.
+    */
     
     //ASR
     if(I == 0 && h == 1 && s == 0)
@@ -277,7 +275,6 @@ int branch_process(char* i_) {
   //print("L = " + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
   printf("L = %d\nOffset = %d\nCC: %d", L2, offset2, byte_to_binary4(CC)); // + L2 + "\n" + "Offset = " + offset2 + "\n" + "CC: " + byte_to_binary4(CC));
   
-  /* Add branch instructions here */ 
   // B
   if(L2 == 0) {
     printf("\n--- This is an B (Branch) instruction. \n");
@@ -295,7 +292,7 @@ int branch_process(char* i_) {
 
 // load/store instructions
 int transfer_process(char* i_) {
-  /* This function execute memory instruction */
+
   // get the condition codes
   char d_cond[5]; 
   d_cond[0] = i_[0]; 
@@ -309,7 +306,6 @@ int transfer_process(char* i_) {
     These 4 variables define the addressing modes.
     L, and B are used here.
     P, W are used in the isa.h.
-    I don't know what the U is so we'll just ignore it...
   */
   char i[2]; i[0] = i_[6]; i[1] = '\0';
   char p[2]; p[0] = i_[7]; p[1] = '\0';
@@ -373,7 +369,7 @@ int transfer_process(char* i_) {
   }
 
   /*
-    As a general note, the 'type' of addressing mode
+    As a general note for the ISA, the 'type' of addressing mode
     (preindex, offset, or postindex) needs to be determined in the
     isa.h. The lec_isa_pt2.pptx should help.
   */
